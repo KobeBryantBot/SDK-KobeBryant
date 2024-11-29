@@ -2,26 +2,26 @@
 #include <filesystem>
 #include <functional>
 #include <iostream>
-#include <optional>
 
 class LevelDB {
-private:
-    enum CompressionType {
-        kNoCompression      = 0x0,
-        kSnappyCompression  = 0x1,
-        kZstdCompression    = 0x2,
-        kZLibRawCompression = 0x4,
-    };
+protected:
+    class LevelDBImpl;
+    std::unique_ptr<LevelDBImpl> mImpl;
 
 public:
-    [[nodiscard]] explicit LevelDB(std::filesystem::path const& path);
+    enum CompressionType { kNoCompression = 0x0, kSnappyCompression = 0x1, kZstdCompression = 0x2 };
+
+    [[nodiscard]] explicit LevelDB(
+        std::filesystem::path const& path,
+        CompressionType              compressionType = CompressionType::kSnappyCompression
+    );
 
     [[nodiscard]] explicit LevelDB(
         std::filesystem::path const& path,
         bool                         createIfMiss,
         bool                         fixIfError,
-        int                          bloomFilterBit,
-        CompressionType              compressionType
+        int                          bloomFilterBit  = 0,
+        CompressionType              compressionType = CompressionType::kSnappyCompression
     );
 
     LevelDB(LevelDB const&) noexcept = delete;

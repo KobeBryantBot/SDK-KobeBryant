@@ -2,7 +2,6 @@
 #include "Macros.hpp"
 #include <iostream>
 #include <vector>
-#include <windows.h>
 
 namespace utils {
 
@@ -15,7 +14,7 @@ constexpr inline std::string& ReplaceStr(std::string& str, std::string_view oldV
 }
 
 [[nodiscard]] constexpr inline std::string
-ReplaceStr(std::string const& str, std::string_view oldValue, std::string_view newValue) {
+ReplaceStr(const std::string& str, std::string_view oldValue, std::string_view newValue) {
     std::string ret = str;
     ReplaceStr(ret, oldValue, newValue);
     return ret;
@@ -66,6 +65,8 @@ KobeBryant_NDAPI std::string toCamelCase(std::string_view str);
 
 KobeBryant_NDAPI std::string toSnakeCase(std::string_view str);
 
+#ifdef _WIN32
+
 namespace CodePage {
 enum : uint32_t {
     DefaultACP = 0,  // default to ANSI code page
@@ -80,12 +81,16 @@ KobeBryant_NDAPI std::wstring stringtoWstring(std::string_view str, uint32_t cod
 
 KobeBryant_NDAPI std::string wstringtoString(std::wstring_view wstr, uint32_t codePage = CodePage::UTF8);
 
-KobeBryant_NDAPI std::string getTimeStringFormatted(std::string const& format = "%Y-%m-%d %H:%M:%S");
+#else
 
-KobeBryant_NDAPI std::string trimString(std::string const& str);
+#endif
 
-KobeBryant_NDAPI std::string toBinaryString(std::vector<uint8_t> const& binary);
+KobeBryant_NDAPI std::string getTimeStringFormatted(const std::string& format = "%Y-%M-%D %H:%M:%S");
 
-KobeBryant_NDAPI std::vector<uint8_t> toBinaryArray(std::string const& binary);
+KobeBryant_NDAPI std::string trimString(const std::string& str);
+
+KobeBryant_NDAPI std::string toBinaryString(const std::vector<uint8_t>& binary);
+
+KobeBryant_NDAPI std::vector<uint8_t> toBinaryArray(const std::string& binary);
 
 } // namespace utils
